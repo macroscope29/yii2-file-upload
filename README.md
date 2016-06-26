@@ -2,7 +2,7 @@
 
 [![Stable Version](https://poser.pugx.org/vlaim/yii2-file-upload/v/stable)](https://packagist.org/packages/vlaim/yii2-file-upload) [![License](https://poser.pugx.org/vlaim/yii2-file-upload/license)](https://packagist.org/packages/vlaim/yii2-file-upload)
 
-**Yii2 FileUpload** – PHP library for uploading files to your server or [Amazon S3](https://aws.amazon.com/ru/documentation/s3). It makes easy for developers to handle with yii2 UploadedFile instances. It's also possible to upload files via URLs.
+**Yii2 FileUpload** – PHP library for uploading files to your server or [Amazon S3](https://aws.amazon.com/ru/documentation/s3). It makes easy for developers to handle with yii2 UploadedFile instances. It's also possible to upload files via URLs from external sources.
 
 ## Getting Started
 
@@ -22,21 +22,41 @@ or add
 
 to the `require` section of your `composer.json` file.
 
+**Do not forget include Composer autoloader and define namespace for library**
+
+```php 
+<?php
+require '/path/to/vendor/autoload.php'; 
+use vlaim\fileupload\FileUpload;
+```
+
+
 ## Quick Examples
 
-### Do not forget include Composer autoloader and define namespace for library
 
-`php require 'vendor/autoload.php'; use vlaim\fileupload\FileUpload;`
 
 ### Upload a file to your local server
 
-`php //... $photo = UploadedFile::getInstance($model, 'photo'); $uploader = new FileUpload(FileUpload::S_LOCAL);`
-
+```php 
+$photo = UploadedFile::getInstance($model, 'photo'); 
+$uploader = new FileUpload(FileUpload::S_LOCAL);
+```
 ### Upload a file to Amazon S3
 
-This code uploads a file to Amazon S3\. You must provide an associative array as second argument in FileUpload constructor.
+This code uploads a file to Amazon S3\. You must provide an associative array as second argument in FileUpload constructor in following way:
 
-`php //... $photo = UploadedFile::getInstance($model, 'photo'); $uploader = new FileUpload(FileUpload::S_S3,[ 'version' => 'latest', 'region' => '<regiongoeshere>', 'credentials' => [ 'key' => '<keygoeshere>', 'secret' => '<secretgoeshere>' ], 'bucket'=>'<bucketgoeshere>' ]);`
+```php 
+$photo = UploadedFile::getInstance($model, 'photo'); 
+$uploader = new FileUpload(FileUpload::S_S3, [
+    'version' => 'latest',
+    'region' => '<regiongoeshere>',
+    'credentials' => [
+        'key' => '<keygoeshere>',
+        'secret' => '<secretgoeshere>'
+    ],
+    'bucket' => '<bucketgoeshere>'
+]);
+```
 
 ## Methods
 
@@ -46,29 +66,77 @@ Sets folder name in which files will be uploaded to.
 
 **Default to 'uploads'**
 
-`php $uploader->setUploadFolder('photos');`
+```php 
+$uploader->setUploadFolder('photos');
+```
 
 ### setFsPath(string $fsPath)
+**(Only for Local mode)**
 
-Sets path in which files will be uploaded to. **(Local mode)**
+Sets path in which files will be uploaded to. You can provide absolute or relative path 
 
-**Default to '/'**
 
-`php $uploader->setFsPath('/var/www/path/to/your/app/');`
+**Default to /**
+
+```php 
+$uploader->setFsPath('/var/www/path/to/your/app/');
+```
 
 ### setFsUrl(string $url)
 
-Sets path in which files will be uploaded to. **(Local mode)** For example, if you set path to 'http://static.example.com' File after uploading will have URL http://static.example.com/pathtoyourfile
+**(Only for Local mode)** 
 
-**Default to '/'** `php $uploader->setFsPath('http://pathtoyoursite.com');`
+Sets url. For example, if you set path to 'http://static.example.com' file after uploading will have URL http://static.example.com/path/to/your/file
 
-### useTreeStructure(boolean $treeStructure)
+**Default to /** 
+
+```php
+$uploader->setFsPath('http://pathtoyoursite.com');
+```
 
 ### hashFilename(boolean $hash)
 
-Defines **Default to true**
+Defines if upload filename needs to be hashed using md5 algorythm in following way: 
 
-`php $uploader->hashFilename(false);`
+```php 
+md5($fileName . time() . mt_rand(0, 30) // file.png upload filename will be 2122c3a6ad9997af28cab44b7fe7ab90.jpg
+```
+
+ **Default to true**
+
+
+```php 
+$uploader->hashFilename(false);
+```
+
+### setACL(string $acl)
+
+Sets Access Control List.
+
+Read more at [http://docs.aws.amazon.com/AmazonS3/latest/dev/acl-overview.html](http://docs.aws.amazon.com/AmazonS3/latest/dev/acl-overview.html)
+
+```php 
+$uploader->setACL('public-read');
+```
+
+## Catching and handling exceptions
+To catch exceptions use FileUploadException class
+
+```php 
+<?php
+use vlaim\fileupload\FileUploadException;
+
+try{
+	//your code goes here
+}
+catch(FileUploadException $e){
+	echo $e->getMessage();
+}
+
+```
+
+## Tests
+Will be added soon :)
 
 ## License
 
