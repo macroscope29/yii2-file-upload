@@ -204,9 +204,7 @@ class FileUpload
             'ACL' => $this->_ACL,
             'StorageClass' => 'REDUCED_REDUNDANCY',
         ));
-        
-        var_dump($upload); die;
-
+       
         return $upload->get('ObjectURL');
     }
 
