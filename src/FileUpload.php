@@ -204,6 +204,8 @@ class FileUpload
             'ACL' => $this->_ACL,
             'StorageClass' => 'REDUCED_REDUNDANCY',
         ));
+        
+        var_dump($upload); die;
 
         return $upload->get('ObjectURL');
     }
@@ -273,10 +275,11 @@ class FileUpload
      */
     final function getFilename($file)
     {
-        $fileName = ($file instanceof UploadedFile) ? $file->baseName : $file;
+        $fileName = ($file instanceof UploadedFile) ? $file->name : $file;
         $pathParts = pathinfo($fileName);
+        
 
-        return ($this->_hashFilename ? md5($fileName . mt_rand(0, 30)) : $fileName)
+        return ($this->_hashFilename ? substr(md5($fileName . mt_rand(0, 30)),0,8) : $fileName)
             . "." . $pathParts['extension'];
     }
 
