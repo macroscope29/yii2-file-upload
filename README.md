@@ -10,7 +10,7 @@
 
 The preferred way to install this extension is through [composer](https://getcomposer.org/download/).
 
-> Note: Check the [composer.json](https://github.com/kartik-v/yii2-mpdf/blob/master/composer.json) for this extension's requirements and dependencies. Read this [web tip /wiki](http://webtips.krajee.com/setting-composer-minimum-stability-application/) on setting the `minimum-stability` settings for your application's composer.json.
+> Note: Check the [composer.json](https://github.com/vlaim/yii2-file-upload/blob/master/composer.json) for this extension's requirements and dependencies. Read this [web tip /wiki](http://webtips.krajee.com/setting-composer-minimum-stability-application/) on setting the `minimum-stability` settings for your application's composer.json.
 
 Either run
 
@@ -43,7 +43,7 @@ $uploader = new FileUpload(FileUpload::S_LOCAL);
 ```
 ### Upload a file to Amazon S3
 
-This code uploads a file to Amazon S3\. You must provide an associative array as second argument in FileUpload constructor in following way:
+This code uploads a file to Amazon S3. You must provide an associative array as second argument in FileUpload constructor in following way:
 
 ```php 
 $photo = UploadedFile::getInstance($model, 'photo'); 
@@ -137,6 +137,12 @@ catch(FileUploadException $e){
 
 ## Tests
 Will be added soon :)
+
+Issues
+------
+
+Bug reports and feature requests can be submitted on the [Github Issue Tracker](https://github.com/squizlabs/PHP_CodeSniffer/issues).
+
 
 ## License
 
