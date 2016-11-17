@@ -307,7 +307,7 @@ class FileUpload
      */
     final function getFilename($file)
     {
-        $fileName  = ($file instanceof UploadedFile) ? $file->name : $file;
+        $fileName  = $file->name;
         $pathParts = pathinfo($fileName);
 
         return ($this->_hashFilename ? substr(md5($fileName.mt_rand(0, 30)), 0, 8) : $fileName).".".$pathParts['extension'];
