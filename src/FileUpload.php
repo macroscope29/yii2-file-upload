@@ -266,7 +266,7 @@ class FileUpload
         $upload = $s3->putObject(
             array(
              'Bucket'       => $this->_storageAuthParams['bucket'],
-             'Key'          => $this->getUploadFolder().$this->getFilename(basename($url)),
+             'Key'          => $this->getUploadFolder().basename($url),
              'Body'         => file_get_contents($url),
              'ContentType'  => $headers['Content-Type'],
              'ACL'          => $this->_ACL,
