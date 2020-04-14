@@ -1,4 +1,4 @@
-<?php namespace vlaim\fileupload;
+<?php namespace macroscope29\fileupload;
 
 use Aws\S3\S3Client;
 use yii\web\UploadedFile;
