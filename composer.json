@@ -23,7 +23,7 @@
     },
     "autoload": {
         "psr-4": {
-            "vlaim\\fileupload\\": "src/"
+            "macroscope29\\fileupload\\": "src/"
         }
     }
 }

@@ -1,4 +1,5 @@
-<?php namespace vlaim\fileupload;
+<?php
+namespace macroscope29\fileupload;
 
 use Aws\S3\S3Client;
 use yii\web\UploadedFile;
@@ -32,7 +33,7 @@ class FileUpload
      *
      * @param array $storageAuthParameters Authorisation params
      *
-     * @throws        \vlaim\FileUpload\FileUploadException   Throws exception if storage type is undefined
+     * @throws        \macroscope29\FileUpload\FileUploadException   Throws exception if storage type is undefined
      */
     public function __construct($storage, $storageAuthParams = [])
     {
