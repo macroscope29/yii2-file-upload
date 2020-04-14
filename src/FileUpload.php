@@ -270,7 +270,7 @@ class FileUpload
              'Body'         => file_get_contents($url),
              'ContentType'  => $headers['Content-Type'],
              'ACL'          => $this->_ACL,
-             'StorageClass' => 'REDUCED_REDUNDANCY',
+             'StorageClass' => 'STANDARD',
             )
         );
 
