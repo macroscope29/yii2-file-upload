@@ -1,4 +1,5 @@
-<?php namespace macroscope29\fileupload;
+<?php
+namespace macroscope29\fileupload;
 
 use Aws\S3\S3Client;
 use yii\web\UploadedFile;
@@ -13,34 +14,34 @@ class FileUpload
 {
 
     const S_LOCAL = 1;
-    const S_S3    = 2;
+    const S_S3 = 2;
 
     private $_storage;
     private $_storageAuthParams;
-    private $_folder        = 'uploads';
+    private $_folder = 'uploads';
     private $_treeStructure = true;
-    private $_hashFilename  = true;
-    private $_fsPath        = '/tmp/';
-    private $_fsUrl         = 'http://static.example.com/';
-    private $_ACL           = 'public-read';
+    private $_hashFilename = true;
+    private $_fsPath = '/tmp/';
+    private $_fsUrl = 'http://static.example.com/';
+    private $_ACL = 'public-read';
     public $path;
 
 
     /**
      *
-     * @param integer $storage               1 - Local, 2 — Amazon S3
+     * @param integer $storage 1 - Local, 2 — Amazon S3
      *
-     * @param array   $storageAuthParameters Authorisation params
+     * @param array $storageAuthParameters Authorisation params
      *
-     * @throws        \vlaim\FileUpload\FileUploadException   Throws exception if storage type is undefined
+     * @throws        \macroscope29\FileUpload\FileUploadException   Throws exception if storage type is undefined
      */
     public function __construct($storage, $storageAuthParams = [])
-    { 
-        if($storage != self::S_LOCAL && $storage != self::S_S3){
+    {
+        if ($storage != self::S_LOCAL && $storage != self::S_S3) {
             throw new FileUploadException("Undefined storage. Use 1 (FileUpload::S_LOCAL) for Local and 2 (FileUpload::S_S3) for Amazon S3");
         }
-        
-        $this->_storage           = $storage;
+
+        $this->_storage = $storage;
         $this->_storageAuthParams = $storageAuthParams;
     }
 
@@ -115,17 +116,19 @@ class FileUpload
      *
      * @param UploadedFile $file Uploaded file instance
      *
+     * @return FileUpload
      * @throws FileUploadException   Throws exception if storage type is undefined
      *
-     * @return FileUpload
      */
     public function uploadFromFile($file)
     {
         switch ($this->_storage) {
-        case self::S_LOCAL: $this->path = $this->uploadFromFileToLocalFS($file);
-            break;
-        case self::S_S3: $this->path = $this->uploadFromFileToAmazonS3($file);
-            break;
+            case self::S_LOCAL:
+                $this->path = $this->uploadFromFileToLocalFS($file);
+                break;
+            case self::S_S3:
+                $this->path = $this->uploadFromFileToAmazonS3($file);
+                break;
         }
 
         return $this;
@@ -136,10 +139,12 @@ class FileUpload
     public function uploadFromUrl($url)
     {
         switch ($this->_storage) {
-        case self::S_LOCAL: $this->path = $this->uploadFromUrlToLocalFS($url);
-            break;
-        case self::S_S3: $this->path = $this->uploadFromUrlToAmazonS3($url);
-            break;
+            case self::S_LOCAL:
+                $this->path = $this->uploadFromUrlToLocalFS($url);
+                break;
+            case self::S_S3:
+                $this->path = $this->uploadFromUrlToAmazonS3($url);
+                break;
         }
 
         return $this;
@@ -163,8 +168,8 @@ class FileUpload
 
         $path .= $this->getFilename($file);
 
-        if ($file->saveAs($this->_fsPath.$path)) {
-            return $this->_fsUrl.$path;
+        if ($file->saveAs($this->_fsPath . $path)) {
+            return $this->_fsUrl . $path;
         }
 
     }
@@ -179,7 +184,7 @@ class FileUpload
     private function uploadFromUrlToLocalFS($url)
     {
         $parsed_url = parse_url($url);
-        $headers    = @get_headers($url, 1);
+        $headers = @get_headers($url, 1);
 
         if (!$parsed_url || !$headers || !preg_match('/^(HTTP)(.*)(200)(.*)/i', $headers[0])) {
             throw new FileUploadException('File not found');
@@ -193,8 +198,8 @@ class FileUpload
 
         $path .= $this->getFilename(basename($url));
 
-        if (copy($url, $this->_fsPath.$path)) {
-            return $this->_fsUrl.$path;
+        if (copy($url, $this->_fsPath . $path)) {
+            return $this->_fsUrl . $path;
         }
 
     }
@@ -215,20 +220,20 @@ class FileUpload
         if (!$s3->doesBucketExist($this->_storageAuthParams['bucket'])) {
             $s3->createBucket(
                 array(
-                 'Bucket'             => $this->_storageAuthParams['bucket'],
-                 'LocationConstraint' => $this->_storageAuthParams['region'],
+                    'Bucket' => $this->_storageAuthParams['bucket'],
+                    'LocationConstraint' => $this->_storageAuthParams['region'],
                 )
             );
         }
 
         $upload = $s3->putObject(
             array(
-             'Bucket'       => $this->_storageAuthParams['bucket'],
-             'Key'          => $this->getUploadFolder().$this->getFilename($file),
-             'SourceFile'   => $file->tempName,
-             'ContentType'  => $file->type,
-             'ACL'          => $this->_ACL,
-             'StorageClass' => 'REDUCED_REDUNDANCY',
+                'Bucket' => $this->_storageAuthParams['bucket'],
+                'Key' => $this->getUploadFolder() . $this->getFilename($file),
+                'SourceFile' => $file->tempName,
+                'ContentType' => $file->type,
+                'ACL' => $this->_ACL,
+                'StorageClass' => 'STANDARD',
             )
         );
 
@@ -246,7 +251,7 @@ class FileUpload
     private function uploadFromUrlToAmazonS3($url)
     {
         $parsed_url = parse_url($url);
-        $headers    = @get_headers($url, 1);
+        $headers = @get_headers($url, 1);
 
         if (!$parsed_url || !$headers || !preg_match('/^(HTTP)(.*)(200)(.*)/i', $headers[0])) {
             throw new FileUploadException('File not found');
@@ -257,20 +262,20 @@ class FileUpload
         if (!$s3->doesBucketExist($this->_storageAuthParams['bucket'])) {
             $s3->createBucket(
                 array(
-                 'Bucket'             => $this->_storageAuthParams['bucket'],
-                 'LocationConstraint' => $this->_storageAuthParams['region'],
+                    'Bucket' => $this->_storageAuthParams['bucket'],
+                    'LocationConstraint' => $this->_storageAuthParams['region'],
                 )
             );
         }
 
         $upload = $s3->putObject(
             array(
-             'Bucket'       => $this->_storageAuthParams['bucket'],
-             'Key'          => $this->getUploadFolder().basename($url),
-             'Body'         => file_get_contents($url),
-             'ContentType'  => $headers['Content-Type'],
-             'ACL'          => $this->_ACL,
-             'StorageClass' => 'REDUCED_REDUNDANCY',
+                'Bucket' => $this->_storageAuthParams['bucket'],
+                'Key' => $this->getUploadFolder() . basename($url),
+                'Body' => file_get_contents($url),
+                'ContentType' => $headers['Content-Type'],
+                'ACL' => $this->_ACL,
+                'StorageClass' => 'STANDARD',
             )
         );
 
@@ -285,7 +290,7 @@ class FileUpload
      */
     final function getTreeStructureMap()
     {
-        return substr(md5(microtime()), mt_rand(0, 30), 2).DIRECTORY_SEPARATOR.substr(md5(microtime()), mt_rand(0, 30), 2);
+        return substr(md5(microtime()), mt_rand(0, 30), 2) . DIRECTORY_SEPARATOR . substr(md5(microtime()), mt_rand(0, 30), 2);
 
     }
 
@@ -296,7 +301,7 @@ class FileUpload
      */
     final function getUploadFolder()
     {
-        return $this->_folder.DIRECTORY_SEPARATOR.($this->_treeStructure ? $this->getTreeStructureMap() : "").DIRECTORY_SEPARATOR;
+        return $this->_folder . ($this->_treeStructure ? (DIRECTORY_SEPARATOR . $this->getTreeStructureMap()) : "") . DIRECTORY_SEPARATOR;
 
     }
 
@@ -307,10 +312,10 @@ class FileUpload
      */
     final function getFilename($file)
     {
-        $fileName  = $file->name;
+        $fileName = $file->name;
         $pathParts = pathinfo($fileName);
 
-        return ($this->_hashFilename ? substr(md5($fileName.mt_rand(0, 30)), 0, 8) : $fileName).".".$pathParts['extension'];
+        return ($this->_hashFilename ? substr(md5($fileName . mt_rand(0, 30)), 0, 8) : $fileName) . "." . $pathParts['extension'];
 
     }
 
