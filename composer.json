@@ -1,9 +1,9 @@
 {
-    "name": "vlaim/yii2-file-upload",
+    "name": "macroscope29/yii2-file-upload",
     "description": "Yii2 FileUpload – PHP library for uploading files to local server or Amazon S3",
     "keywords": ["yii", "yii2", "yii 2", "file", "upload", "aws", "s3"],
     "type": "library",
-    "homepage": "https://github.com/vlaim/yii2-file-upload",
+    "homepage": "https://github.com/macroscope29/yii2-file-upload",
     "license": "MIT",
     "authors": [
         {
